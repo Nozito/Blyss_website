@@ -39,3 +39,11 @@ yarn-error.log*
 # typescript
 *.tsbuildinfo
 next-env.d.ts
+
+# docs and reference
+/docs
+/reference
+/assets/product
+
+# claude
+.claude
