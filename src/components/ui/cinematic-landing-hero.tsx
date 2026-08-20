@@ -120,7 +120,7 @@ export function CinematicHero({
     </>
   ),
   ctaHeading = "Rejoins Blyss.",
-  ctaDescription = "Réservations, rappels et paiements réunis au même endroit pensé pour les prothesistes ongulaires.",
+  ctaDescription = "Réservations, rappels et paiements réunis au même endroit pensé pour les prothésistes ongulaires.",
   className,
   ...props
 }: CinematicHeroProps) {
