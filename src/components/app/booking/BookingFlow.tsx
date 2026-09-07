@@ -26,6 +26,7 @@ import { BookingSummary } from './BookingSummary';
 import { AuthStep } from './AuthStep';
 import { PaymentStep } from './PaymentStep';
 import { ConfirmationStep } from './ConfirmationStep';
+import { RibbonSweep } from '@/components/app/RibbonSweep';
 import { ClientOnboardingFlow } from '@/components/app/onboarding/ClientOnboardingFlow';
 
 type Step = 'service' | 'datetime' | 'summary' | 'auth' | 'onboarding' | 'payment' | 'confirm';
@@ -345,6 +346,22 @@ export function BookingFlow({ proId }: { proId: string }) {
     );
   }
 
+  // Confirmation : plein écran "rupture" (hors cadre téléphone).
+  if (step === 'confirm' && selectedDate && selectedTime && selectedPrestationData) {
+    return (
+      <ConfirmationStep
+        proId={proId}
+        proName={proName}
+        prestationName={selectedPrestationData.name}
+        selectedDate={selectedDate}
+        selectedTime={selectedTime}
+        paymentMethod={paymentMethod}
+        depositPercentage={depositPercentage}
+        depositAmount={depositAmount}
+      />
+    );
+  }
+
   const progressIndex = PROGRESS_STEPS.indexOf(step === 'auth' ? 'summary' : (step as Step));
   const stepValid =
     step === 'service'
@@ -357,6 +374,7 @@ export function BookingFlow({ proId }: { proId: string }) {
 
   return (
     <div className="mx-auto flex min-h-screen w-full max-w-[480px] flex-col px-5 md:my-10 md:min-h-[82vh] md:max-w-[440px] md:rounded-[32px] md:border md:border-[var(--blyss-border)] md:bg-[color-mix(in_srgb,white_45%,var(--background))] md:px-7 md:shadow-[var(--shadow-card)]">
+      <RibbonSweep />
       {step !== 'confirm' && (
         <div className="py-4">
           <button
@@ -442,17 +460,6 @@ export function BookingFlow({ proId }: { proId: string }) {
           />
         )}
 
-        {step === 'confirm' && selectedDate && selectedTime && selectedPrestationData && (
-          <ConfirmationStep
-            proName={proName}
-            prestationName={selectedPrestationData.name}
-            selectedDate={selectedDate}
-            selectedTime={selectedTime}
-            paymentMethod={paymentMethod}
-            depositPercentage={depositPercentage}
-            depositAmount={depositAmount}
-          />
-        )}
       </div>
 
       {error && (

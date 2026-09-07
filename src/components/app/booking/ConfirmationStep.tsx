@@ -1,9 +1,12 @@
-import { Fragment } from 'react';
-import { Check, Sparkles } from 'lucide-react';
+import Link from 'next/link';
 import { StoreBadges } from '@/components/app/StoreBadges';
+import { RibbonSweep } from '@/components/app/RibbonSweep';
 import { formatPrice } from '@/lib/blyss/format';
 
+const PRUNE = '#2b1420';
+
 interface Props {
+  proId: string;
   proName: string;
   prestationName: string;
   selectedDate: Date;
@@ -14,6 +17,7 @@ interface Props {
 }
 
 export function ConfirmationStep({
+  proId,
   proName,
   prestationName,
   selectedDate,
@@ -22,64 +26,66 @@ export function ConfirmationStep({
   depositPercentage,
   depositAmount,
 }: Props) {
-  const rows: Array<{ label: string; value: string }> = [
-    { label: 'Spécialiste', value: proName },
-    { label: 'Prestation', value: prestationName },
-    {
-      label: 'Date',
-      value: selectedDate.toLocaleDateString('fr-FR', {
-        weekday: 'short',
-        day: 'numeric',
-        month: 'long',
-      }),
-    },
-    { label: 'Horaire', value: selectedTime },
-    {
-      label: 'Paiement',
-      value:
-        paymentMethod === 'on_site'
-          ? 'Sur place'
-          : depositPercentage < 100
-            ? `Acompte payé (${formatPrice(depositAmount ?? 0)})`
-            : 'Payé en ligne',
-    },
-  ];
+  const dateLabel = selectedDate.toLocaleDateString('fr-FR', {
+    weekday: 'long',
+    day: 'numeric',
+    month: 'long',
+  });
+
+  const paymentLabel =
+    paymentMethod === 'on_site'
+      ? 'Paiement sur place'
+      : depositPercentage < 100
+        ? `Acompte de ${formatPrice(depositAmount ?? 0)} payé`
+        : 'Payé en ligne';
 
   return (
-    <div className="flex flex-col items-center gap-6 py-10">
-      <span className="flex h-24 w-24 items-center justify-center rounded-full bg-[var(--color-primary)] shadow-[var(--shadow-soft)]">
-        <Check size={48} className="text-white" strokeWidth={3} />
-      </span>
-
-      <div className="flex flex-col items-center gap-1.5 text-center">
-        <div className="flex items-center gap-2">
-          <h1 className="text-[26px] font-extrabold text-[var(--blyss-text)]">Réservation confirmée</h1>
-          <Sparkles size={22} className="text-[var(--color-primary)]" />
-        </div>
-        <p className="max-w-[280px] text-sm leading-5 text-[var(--blyss-muted)]">
-          Tu recevras une confirmation et un rappel avant ton rendez-vous.
+    <div
+      className="flex min-h-screen flex-col justify-between px-6 pb-10 pt-16 text-white sm:px-10 lg:px-16"
+      style={{ backgroundColor: PRUNE }}
+    >
+      <RibbonSweep />
+      <div className="mx-auto w-full max-w-[760px]">
+        <p className="text-[11px] font-bold uppercase tracking-[0.18em] text-white/60">
+          {dateLabel} · {selectedTime} · {proName}
+        </p>
+        <h1 className="mt-8 text-[clamp(3.5rem,16vw,9rem)] font-extrabold uppercase leading-[0.85] tracking-[-0.04em]">
+          C&apos;est
+          <br />
+          pris.
+        </h1>
+        <p className="mt-8 max-w-[42ch] text-[clamp(1rem,0.95rem+0.4vw,1.25rem)] leading-[1.5] text-white/85">
+          {prestationName} avec {proName}. Tu recevras une confirmation et un rappel avant le
+          rendez-vous.
         </p>
       </div>
 
-      <div className="flex w-full flex-col gap-3 rounded-[20px] bg-white p-5 shadow-[var(--shadow-card)]">
-        {rows.map((row, i) => (
-          <Fragment key={row.label}>
-            <div className="flex items-center justify-between gap-4">
-              <span className="text-[13px] text-[var(--blyss-muted)]">{row.label}</span>
-              <span className="text-right text-[13px] font-medium text-[var(--blyss-text)]">
-                {row.value}
-              </span>
+      <div className="mx-auto mt-12 w-full max-w-[760px]">
+        <dl className="border-t border-white/15">
+          {[
+            ['Prestation', prestationName],
+            ['Date', `${dateLabel} · ${selectedTime}`],
+            ['Paiement', paymentLabel],
+          ].map(([k, v]) => (
+            <div key={k} className="flex items-baseline justify-between gap-6 border-b border-white/15 py-4">
+              <dt className="text-[11px] font-bold uppercase tracking-[0.14em] text-white/50">{k}</dt>
+              <dd className="text-right text-sm font-semibold">{v}</dd>
             </div>
-            {i < rows.length - 1 && <div className="h-px bg-[var(--blyss-border)]" />}
-          </Fragment>
-        ))}
-      </div>
+          ))}
+        </dl>
 
-      <div className="flex w-full flex-col items-center gap-3 rounded-2xl bg-[var(--blyss-pink-light)] p-5 text-center">
-        <p className="text-[13px] font-semibold text-[var(--color-primary)]">
-          Télécharge l&apos;app Blyss pour gérer ton rendez-vous et échanger avec {proName}.
-        </p>
-        <StoreBadges />
+        <div className="mt-10 flex flex-col items-start gap-4">
+          <p className="text-sm text-white/75">
+            Gère ce rendez-vous et échange avec {proName} dans l&apos;app Blyss.
+          </p>
+          <StoreBadges className="!justify-start" />
+          <Link
+            href={`/s/${proId}`}
+            className="text-[13px] font-semibold uppercase tracking-wide text-white/70 underline underline-offset-4 hover:text-white"
+          >
+            Revoir le profil
+          </Link>
+        </div>
       </div>
     </div>
   );
