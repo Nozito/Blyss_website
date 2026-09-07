@@ -41,11 +41,12 @@ export function ConfirmationStep({
 
   return (
     <div
-      className="flex min-h-screen flex-col justify-between px-6 pb-10 pt-16 text-white sm:px-10 lg:px-16"
+      className="flex min-h-screen flex-col px-6 pb-12 pt-16 text-white sm:px-10 lg:px-16"
       style={{ backgroundColor: PRUNE }}
     >
       <RibbonSweep />
-      <div className="mx-auto w-full max-w-[760px]">
+
+      <div className="mx-auto w-full max-w-[820px]">
         <p className="text-[11px] font-bold uppercase tracking-[0.18em] text-white/60">
           {dateLabel} · {selectedTime} · {proName}
         </p>
@@ -54,38 +55,47 @@ export function ConfirmationStep({
           <br />
           pris.
         </h1>
-        <p className="mt-8 max-w-[42ch] text-[clamp(1rem,0.95rem+0.4vw,1.25rem)] leading-[1.5] text-white/85">
-          {prestationName} avec {proName}. Tu recevras une confirmation et un rappel avant le
-          rendez-vous.
+        <p className="mt-8 max-w-[44ch] text-[clamp(1rem,0.95rem+0.4vw,1.25rem)] leading-[1.5] text-white/85">
+          {prestationName} avec {proName}, le {dateLabel} à {selectedTime}.
         </p>
       </div>
 
-      <div className="mx-auto mt-12 w-full max-w-[760px]">
+      {/* Incitation app — action principale : sans l'app, pas de confirmation ni de rappel */}
+      <div className="mx-auto mt-12 w-full max-w-[420px]">
+        <div className="rounded-[24px] bg-white/10 p-6 backdrop-blur-sm">
+          <p className="text-[15px] font-bold leading-snug">
+            Télécharge l&apos;app Blyss pour recevoir ta confirmation, tes rappels, et échanger
+            avec {proName}.
+          </p>
+          <div className="mt-5">
+            <StoreBadges variant="hero" onDark />
+          </div>
+        </div>
+      </div>
+
+      <div className="mx-auto mt-10 w-full max-w-[820px]">
         <dl className="border-t border-white/15">
           {[
             ['Prestation', prestationName],
             ['Date', `${dateLabel} · ${selectedTime}`],
             ['Paiement', paymentLabel],
           ].map(([k, v]) => (
-            <div key={k} className="flex items-baseline justify-between gap-6 border-b border-white/15 py-4">
+            <div
+              key={k}
+              className="flex items-baseline justify-between gap-6 border-b border-white/15 py-4"
+            >
               <dt className="text-[11px] font-bold uppercase tracking-[0.14em] text-white/50">{k}</dt>
               <dd className="text-right text-sm font-semibold">{v}</dd>
             </div>
           ))}
         </dl>
 
-        <div className="mt-10 flex flex-col items-start gap-4">
-          <p className="text-sm text-white/75">
-            Gère ce rendez-vous et échange avec {proName} dans l&apos;app Blyss.
-          </p>
-          <StoreBadges className="!justify-start" />
-          <Link
-            href={`/s/${proId}`}
-            className="text-[13px] font-semibold uppercase tracking-wide text-white/70 underline underline-offset-4 hover:text-white"
-          >
-            Revoir le profil
-          </Link>
-        </div>
+        <Link
+          href={`/s/${proId}`}
+          className="mt-8 inline-block text-[13px] font-semibold uppercase tracking-wide text-white/60 underline underline-offset-4 hover:text-white"
+        >
+          Revoir le profil de {proName}
+        </Link>
       </div>
     </div>
   );

@@ -229,6 +229,20 @@ export default async function PublicProfilePage({ params }: Params) {
               </div>
             </div>
           )}
+
+          <a
+            href="https://blyssapp.fr/telecharger"
+            target="_blank"
+            rel="noopener noreferrer"
+            className="mt-12 flex items-center justify-between gap-4 rounded-[18px] border border-[var(--blyss-text)]/12 bg-white px-5 py-4"
+          >
+            <span className="text-[13px] font-semibold text-[var(--blyss-text)]">
+              L&apos;agenda, les rappels et la messagerie sont dans l&apos;app Blyss.
+            </span>
+            <span className="flex shrink-0 items-center gap-1.5 rounded-full bg-[var(--blyss-text)] px-4 py-2 text-xs font-extrabold text-white">
+              App Store
+            </span>
+          </a>
         </div>
       </section>
 
@@ -297,10 +311,13 @@ export default async function PublicProfilePage({ params }: Params) {
               Réserver un créneau
             </Link>
           )}
-          <p className="text-sm text-white/80">
-            Gère tes rendez-vous et échange avec {name} dans l&apos;app Blyss.
+          <p className="max-w-[40ch] text-sm text-white/80">
+            Réserve ici, puis retrouve ton rendez-vous, tes rappels et la messagerie avec {name}
+            dans l&apos;app Blyss.
           </p>
-          <StoreBadges />
+          <div className="w-full max-w-[340px] rounded-[24px] bg-white/12 p-5 backdrop-blur-sm">
+            <StoreBadges variant="hero" onDark />
+          </div>
         </div>
       </section>
 

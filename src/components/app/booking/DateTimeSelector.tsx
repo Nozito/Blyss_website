@@ -197,7 +197,7 @@ export function DateTimeSelector({
             {selectedDate ? 'Aucun créneau disponible pour cette date' : "Sélectionne d'abord une date"}
           </div>
         ) : (
-          <div className="grid grid-cols-2 gap-2.5">
+          <div className="grid grid-cols-2 gap-2.5 sm:grid-cols-3">
             {availableSlots.map((slot) => {
               const active = selectedTime === slot.time;
               return (
