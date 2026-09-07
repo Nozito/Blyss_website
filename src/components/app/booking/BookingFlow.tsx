@@ -17,6 +17,7 @@ import {
   canPayOnline as computeCanPayOnline,
   resolvePaymentType,
   toLocalDateStr,
+  toNumber,
 } from '@/lib/blyss/format';
 import { StepIndicator } from './StepIndicator';
 import { ServiceSelector } from './ServiceSelector';
@@ -234,10 +235,10 @@ export function BookingFlow({ proId }: { proId: string }) {
         });
         if (!res.success || !res.data) throw new Error(res.error ?? 'Erreur lors de la réservation');
         reservationId = res.data.id;
-        depositPct = res.data.deposit_percentage;
+        depositPct = toNumber(res.data.deposit_percentage);
         setPendingReservationId(res.data.id);
-        setDepositPercentage(res.data.deposit_percentage);
-        setDepositAmount(res.data.deposit_amount);
+        setDepositPercentage(depositPct);
+        setDepositAmount(res.data.deposit_amount == null ? null : toNumber(res.data.deposit_amount));
       }
 
       if (paymentMethod === 'on_site') {
@@ -251,7 +252,7 @@ export function BookingFlow({ proId }: { proId: string }) {
       });
       if (!intent.success || !intent.data) throw new Error(intent.error ?? 'Erreur de paiement');
       setClientSecret(intent.data.client_secret);
-      setDepositAmount(intent.data.amount);
+      setDepositAmount(toNumber(intent.data.amount));
       setStep('payment');
     } catch (e) {
       setError(e instanceof Error ? e.message : 'Erreur lors de la réservation.');

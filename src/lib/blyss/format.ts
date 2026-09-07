@@ -26,8 +26,15 @@ export const calculateEndDateTime = (
   return new Date(start.getTime() + durationMinutes * 60_000);
 };
 
-export function resolvePaymentType(depositPercentage: number): 'full' | 'deposit' {
-  return depositPercentage === 100 ? 'full' : 'deposit';
+/** Coerce une valeur API (number, ou string "12,50" / "12.50") en number. */
+export function toNumber(v: unknown): number {
+  if (typeof v === 'number') return Number.isFinite(v) ? v : 0;
+  const n = parseFloat(String(v ?? '').replace(/\s/g, '').replace(',', '.'));
+  return Number.isFinite(n) ? n : 0;
+}
+
+export function resolvePaymentType(depositPercentage: number | string): 'full' | 'deposit' {
+  return toNumber(depositPercentage) === 100 ? 'full' : 'deposit';
 }
 
 export function canPayOnline(
@@ -37,6 +44,6 @@ export function canPayOnline(
   return stripeOnboardingComplete && acceptOnlinePayment;
 }
 
-export function formatPrice(v: number): string {
-  return `${v.toFixed(2)}€`;
+export function formatPrice(v: number | string | null | undefined): string {
+  return `${toNumber(v).toFixed(2)}€`;
 }
