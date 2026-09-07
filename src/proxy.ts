@@ -19,7 +19,7 @@ const API_ORIGIN = (
   'https://app.blyssapp.fr'
 ).replace(/\/+$/, '');
 
-export function middleware(req: NextRequest) {
+export function proxy(req: NextRequest) {
   const { pathname, search } = req.nextUrl;
 
   let targetPath: string | null = null;
