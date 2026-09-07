@@ -1,11 +1,19 @@
 /**
- * Config API Blyss. `app.blyssapp.fr` sert le backend Node (`/api/*`) derrière
- * nginx sur le VPS ; `api.blyssapp.fr` prendra le relais quand le sous-domaine
- * sera créé (cf. docs). Surchargeable via `NEXT_PUBLIC_BLYSS_API_URL`.
+ * Base des appels API.
+ * - Côté serveur (Server Components) : `app.blyssapp.fr` en direct — pas de CORS
+ *   entre serveurs. Surchargeable via `BLYSS_API_URL` / `NEXT_PUBLIC_BLYSS_API_URL`.
+ * - Côté client : URL relative → un rewrite Next (`/api/* → app.blyssapp.fr/api/*`,
+ *   cf. next.config.ts) proxifie la requête en **same-origin**, ce qui évite
+ *   toute config CORS côté backend (localhost inclus).
  */
-export const BLYSS_API_URL: string = (
-  process.env.NEXT_PUBLIC_BLYSS_API_URL ?? 'https://app.blyssapp.fr'
-).replace(/\/+$/, '');
+export const BLYSS_API_URL: string =
+  typeof window === 'undefined'
+    ? (
+        process.env.BLYSS_API_URL ??
+        process.env.NEXT_PUBLIC_BLYSS_API_URL ??
+        'https://app.blyssapp.fr'
+      ).replace(/\/+$/, '')
+    : '';
 
 export const STRIPE_PUBLISHABLE_KEY: string =
   process.env.NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY ?? '';
