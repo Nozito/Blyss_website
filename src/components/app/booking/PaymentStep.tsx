@@ -2,13 +2,7 @@
 
 import { useMemo, useState } from 'react';
 import { loadStripe } from '@stripe/stripe-js';
-import {
-  Elements,
-  ExpressCheckoutElement,
-  PaymentElement,
-  useElements,
-  useStripe,
-} from '@stripe/react-stripe-js';
+import { Elements, PaymentElement, useElements, useStripe } from '@stripe/react-stripe-js';
 import { ShieldCheck, CreditCard, AlertCircle } from 'lucide-react';
 import { STRIPE_PUBLISHABLE_KEY } from '@/lib/blyss/config';
 import { formatPrice } from '@/lib/blyss/format';
@@ -24,24 +18,22 @@ interface Props {
   onError: (message: string) => void;
 }
 
-function PayForm({
-  amount,
-  onSuccess,
-  onError,
-}: Pick<Props, 'amount' | 'onSuccess' | 'onError'>) {
+function PayForm({ amount, onSuccess, onError }: Pick<Props, 'amount' | 'onSuccess' | 'onError'>) {
   const stripe = useStripe();
   const elements = useElements();
   const [paying, setPaying] = useState(false);
   const [ready, setReady] = useState(false);
-  const [hasWallet, setHasWallet] = useState(false);
 
-  const confirm = async () => {
-    if (!stripe || !elements) return;
+  const handlePay = async () => {
+    if (!stripe || !elements || paying) return;
+    setPaying(true);
     const { error, paymentIntent } = await stripe.confirmPayment({
       elements,
       redirect: 'if_required',
       confirmParams: { return_url: window.location.href },
     });
+    setPaying(false);
+
     if (error) {
       onError(error.message ?? 'Le paiement a échoué.');
       return;
@@ -56,43 +48,23 @@ function PayForm({
     }
   };
 
-  const handleCardPay = async () => {
-    if (!stripe || !elements || paying) return;
-    setPaying(true);
-    await confirm();
-    setPaying(false);
-  };
-
   return (
     <div className="flex flex-col gap-4">
-      {/* Apple Pay / Google Pay / Link */}
-      <ExpressCheckoutElement
-        options={{ buttonHeight: 48 }}
-        onReady={({ availablePaymentMethods }) =>
-          setHasWallet(!!availablePaymentMethods && Object.keys(availablePaymentMethods).length > 0)
-        }
-        onConfirm={async () => {
-          setPaying(true);
-          await confirm();
-          setPaying(false);
-        }}
-      />
-
-      {hasWallet && (
-        <div className="flex items-center gap-3 text-[11px] font-semibold uppercase tracking-wide text-[var(--blyss-muted)]">
-          <span className="h-px flex-1 bg-[var(--blyss-border)]" />
-          ou payer par carte
-          <span className="h-px flex-1 bg-[var(--blyss-border)]" />
-        </div>
-      )}
-
       <div className="rounded-[20px] bg-white p-4 shadow-[var(--shadow-card)]">
-        <PaymentElement onReady={() => setReady(true)} options={{ wallets: { applePay: 'never', googlePay: 'never' } }} />
+        {/* Apple Pay / Google Pay / Link / Carte — proposés par Stripe selon
+            l'appareil et le navigateur (Apple Pay : Safari + domaine enregistré). */}
+        <PaymentElement
+          onReady={() => setReady(true)}
+          options={{
+            layout: { type: 'tabs', defaultCollapsed: false },
+            wallets: { applePay: 'auto', googlePay: 'auto' },
+          }}
+        />
       </div>
 
       <button
         type="button"
-        onClick={handleCardPay}
+        onClick={handlePay}
         disabled={!ready || paying || !stripe}
         className="flex h-14 items-center justify-center gap-2 rounded-[16px] bg-[var(--color-primary)] text-[15px] font-bold text-white shadow-[var(--shadow-soft)] disabled:opacity-50"
       >
@@ -147,7 +119,7 @@ export function PaymentStep({
                 '.Input': { border: '1px solid #ebe6e0', boxShadow: 'none' },
                 '.Input:focus': { border: '1px solid #fe5d9d', boxShadow: 'none' },
                 '.Tab': { border: '1px solid #ebe6e0' },
-                '.Tab--selected': { borderColor: '#fe5d9d' },
+                '.Tab--selected': { borderColor: '#fe5d9d', color: '#fe5d9d' },
               },
             },
           }
@@ -208,7 +180,7 @@ export function PaymentStep({
 
       <div className="flex items-center justify-center gap-1.5 text-[11px] text-[var(--blyss-muted)]">
         <ShieldCheck size={14} />
-        Paiement sécurisé par Stripe · Apple&nbsp;Pay, Google&nbsp;Pay et carte
+        Paiement sécurisé par Stripe
       </div>
       <p className="text-center text-[11px] leading-4 text-[var(--blyss-muted)]">
         Besoin d&apos;annuler ? Tu peux le faire depuis l&apos;app Blyss — les conditions
