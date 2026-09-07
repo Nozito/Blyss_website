@@ -113,12 +113,12 @@ export default async function PublicProfilePage({ params }: Params) {
         (pro.city ? `Zone d'intervention autour de ${pro.city}` : null);
 
   return (
-    <div className="mx-auto w-full max-w-[640px] pb-28">
-      {/* Bannière */}
-      <div className="relative h-48 w-full bg-[var(--blyss-pink-light)] sm:h-56">
+    <div className="pb-28">
+      {/* Bannière — pleine largeur, hauteur responsive */}
+      <div className="relative h-40 w-full bg-[var(--blyss-pink-light)] sm:h-52 md:h-60 lg:h-64">
         {banner ? (
           // eslint-disable-next-line @next/next/no-img-element
-          <img src={banner} alt="" className="h-full w-full object-cover" />
+          <img src={banner} alt="" className="h-full w-full object-cover object-center" />
         ) : (
           <div className="flex h-full items-center justify-center">
             <Sparkles size={48} className="text-[var(--color-primary)] opacity-25" />
@@ -126,9 +126,9 @@ export default async function PublicProfilePage({ params }: Params) {
         )}
       </div>
 
-      {/* Identité */}
-      <div className="flex flex-col items-center px-5">
-        <div className="-mt-11 flex h-[88px] w-[88px] items-center justify-center overflow-hidden rounded-3xl border-[3px] border-white bg-[var(--blyss-pink-light)] shadow-[var(--shadow-card)]">
+      {/* Identité — l'avatar chevauche la bannière (devant) */}
+      <div className="mx-auto flex w-full max-w-[640px] flex-col items-center px-5">
+        <div className="relative z-10 -mt-12 flex h-24 w-24 items-center justify-center overflow-hidden rounded-3xl border-4 border-white bg-[var(--blyss-pink-light)] shadow-[var(--shadow-card)]">
           {avatar ? (
             // eslint-disable-next-line @next/next/no-img-element
             <img src={avatar} alt={name} className="h-full w-full object-cover" />
@@ -169,7 +169,7 @@ export default async function PublicProfilePage({ params }: Params) {
         )}
       </div>
 
-      <div className="mt-6 flex flex-col gap-6 px-5">
+      <div className="mx-auto mt-6 flex w-full max-w-[640px] flex-col gap-6 px-5">
         {pro.bio && (
           <section className="rounded-[20px] bg-white p-5 shadow-[var(--shadow-card)]">
             <p className="whitespace-pre-line text-sm leading-6 text-[var(--blyss-text)]">{pro.bio}</p>
