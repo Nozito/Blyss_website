@@ -134,7 +134,7 @@ export function ClientOnboardingFlow({ onDone, onSkip, fromBooking }: Props) {
 
   return (
     <div
-      className="flex min-h-screen flex-col px-5 pb-8 pt-6 transition-colors"
+      className="flex min-h-screen flex-col px-5 pb-8 pt-6 transition-colors md:mx-auto md:my-10 md:min-h-[82vh] md:max-w-[430px] md:overflow-hidden md:rounded-[36px] md:shadow-[var(--shadow-soft)]"
       style={{ background: bg, color: ink }}
     >
       <div className="mx-auto flex w-full max-w-[480px] flex-1 flex-col">

@@ -113,7 +113,7 @@ export default async function PublicProfilePage({ params }: Params) {
         (pro.city ? `Zone d'intervention autour de ${pro.city}` : null);
 
   return (
-    <div className="pb-28">
+    <div className="pb-28 lg:pb-16">
       {/* Bannière — pleine largeur, hauteur responsive */}
       <div className="relative h-40 w-full bg-[var(--blyss-pink-light)] sm:h-52 md:h-60 lg:h-64">
         {banner ? (
@@ -127,7 +127,7 @@ export default async function PublicProfilePage({ params }: Params) {
       </div>
 
       {/* Identité — l'avatar chevauche la bannière (devant) */}
-      <div className="mx-auto flex w-full max-w-[640px] flex-col items-center px-5">
+      <div className="mx-auto flex w-full max-w-[640px] flex-col items-center px-5 lg:max-w-[1040px]">
         <div className="relative z-10 -mt-12 flex h-24 w-24 items-center justify-center overflow-hidden rounded-3xl border-4 border-white bg-[var(--blyss-pink-light)] shadow-[var(--shadow-card)]">
           {avatar ? (
             // eslint-disable-next-line @next/next/no-img-element
@@ -169,7 +169,9 @@ export default async function PublicProfilePage({ params }: Params) {
         )}
       </div>
 
-      <div className="mx-auto mt-6 flex w-full max-w-[640px] flex-col gap-6 px-5">
+      <div className="mx-auto mt-6 w-full max-w-[640px] px-5 lg:grid lg:max-w-[1040px] lg:grid-cols-[1fr_340px] lg:items-start lg:gap-10">
+       {/* Colonne principale */}
+       <div className="flex flex-col gap-6">
         {pro.bio && (
           <section className="rounded-[20px] bg-white p-5 shadow-[var(--shadow-card)]">
             <p className="whitespace-pre-line text-sm leading-6 text-[var(--blyss-text)]">{pro.bio}</p>
@@ -179,6 +181,7 @@ export default async function PublicProfilePage({ params }: Params) {
         {services.length > 0 && (
           <section className="flex flex-col gap-3">
             <h2 className="text-[15px] font-bold text-[var(--blyss-text)]">Prestations</h2>
+            <div className="grid gap-3 sm:grid-cols-2">
             {services.map((s) => (
               <div
                 key={s.id}
@@ -201,13 +204,14 @@ export default async function PublicProfilePage({ params }: Params) {
                 </span>
               </div>
             ))}
+            </div>
           </section>
         )}
 
         {gallery.length > 0 && (
           <section className="flex flex-col gap-3">
             <h2 className="text-[15px] font-bold text-[var(--blyss-text)]">Réalisations</h2>
-            <div className="grid grid-cols-3 gap-2">
+            <div className="grid grid-cols-3 gap-2 sm:grid-cols-4">
               {gallery.map((g) => (
                 // eslint-disable-next-line @next/next/no-img-element
                 <img
@@ -269,11 +273,52 @@ export default async function PublicProfilePage({ params }: Params) {
           </p>
           <StoreBadges />
         </section>
+       </div>
+
+       {/* Colonne latérale (desktop) — carte de réservation collante */}
+       {services.length > 0 && (
+         <aside className="mt-6 hidden lg:sticky lg:top-8 lg:mt-0 lg:block">
+           <div className="flex flex-col gap-4 rounded-[24px] bg-white p-6 shadow-[var(--shadow-card)]">
+             {minPrice != null && (
+               <div>
+                 <p className="text-xs text-[var(--blyss-muted)]">À partir de</p>
+                 <p className="text-[26px] font-extrabold text-[var(--blyss-text)]">
+                   {formatPrice(minPrice)}
+                 </p>
+               </div>
+             )}
+             {avgRating != null && (
+               <div className="flex items-center gap-1.5">
+                 <StarRow rating={avgRating} />
+                 <span className="text-[13px] font-bold text-[var(--blyss-text)]">
+                   {avgRating.toFixed(1)}
+                 </span>
+                 <span className="text-[13px] text-[var(--blyss-muted)]">({reviews.length} avis)</span>
+               </div>
+             )}
+             {pro.city && (
+               <p className="flex items-center gap-1 text-sm text-[var(--blyss-muted)]">
+                 <MapPin size={14} /> {pro.city}
+               </p>
+             )}
+             <Link
+               href={`/booking/${id}`}
+               className="mt-1 flex h-14 items-center justify-center gap-2 rounded-[16px] bg-[var(--color-primary)] text-[15px] font-bold text-white shadow-[var(--shadow-soft)]"
+             >
+               <Calendar size={18} />
+               Réserver
+             </Link>
+             <p className="text-center text-[11px] text-[var(--blyss-muted)]">
+               Réservation en ligne · confirmation immédiate
+             </p>
+           </div>
+         </aside>
+       )}
       </div>
 
-      {/* CTA sticky */}
+      {/* CTA collant (mobile / tablette) */}
       {services.length > 0 && (
-        <div className="fixed inset-x-0 bottom-0 z-10 border-t border-[var(--blyss-border)] bg-white/95 px-5 py-3 backdrop-blur">
+        <div className="fixed inset-x-0 bottom-0 z-10 border-t border-[var(--blyss-border)] bg-white/95 px-5 py-3 backdrop-blur lg:hidden">
           <div className="mx-auto flex max-w-[640px] items-center gap-3">
             {minPrice != null && (
               <div className="shrink-0">

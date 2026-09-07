@@ -355,7 +355,7 @@ export function BookingFlow({ proId }: { proId: string }) {
           : true;
 
   return (
-    <div className="mx-auto flex min-h-screen w-full max-w-[480px] flex-col px-5">
+    <div className="mx-auto flex min-h-screen w-full max-w-[480px] flex-col px-5 md:my-10 md:min-h-[82vh] md:max-w-[440px] md:rounded-[32px] md:border md:border-[var(--blyss-border)] md:bg-[color-mix(in_srgb,white_45%,var(--background))] md:px-7 md:shadow-[var(--shadow-card)]">
       {step !== 'confirm' && (
         <div className="py-4">
           <button

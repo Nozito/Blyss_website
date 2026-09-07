@@ -54,7 +54,7 @@ export function AuthStep({ onLoggedIn, onSignedUp }: Props) {
         'Mot de passe : 8 caractères min., avec une minuscule, une majuscule, un chiffre et un caractère spécial (!@#$%^&*).',
       );
     if (!acceptedTerms)
-      return setError('Tu dois accepter les CGU et la politique de confidentialité.');
+      return setError('Tu dois accepter les CGV et la politique de confidentialité.');
 
     setBusy(true);
     const res = await signup({
@@ -177,11 +177,21 @@ export function AuthStep({ onLoggedIn, onSignedUp }: Props) {
             </span>
             <span className="flex-1 text-xs leading-[17px] text-[var(--blyss-text)]">
               J&apos;accepte les{' '}
-              <a href="/cgu" target="_blank" className="underline">
-                CGU
+              <a
+                href="https://blyssapp.fr/cgv"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="underline"
+              >
+                CGV
               </a>{' '}
               et la{' '}
-              <a href="/confidentialite" target="_blank" className="underline">
+              <a
+                href="https://blyssapp.fr/confidentialite"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="underline"
+              >
                 politique de confidentialité
               </a>
               .
