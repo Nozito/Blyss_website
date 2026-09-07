@@ -8,7 +8,9 @@ import { AuthProvider } from '@/components/app/AuthProvider';
 export default function AppLayout({ children }: { children: React.ReactNode }) {
   return (
     <AuthProvider>
-      <div className="min-h-screen bg-[var(--background)] text-[var(--blyss-text)]">{children}</div>
+      <div className="min-h-screen overflow-x-hidden bg-[var(--background)] text-[var(--blyss-text)]">
+        {children}
+      </div>
     </AuthProvider>
   );
 }
